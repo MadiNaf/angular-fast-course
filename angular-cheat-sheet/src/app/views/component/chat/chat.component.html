@@ -1,5 +1,5 @@
 <div id="chat">
-  <section class="conversation-container">
+  <section class="container">
     <ng-container [ngTemplateOutlet]="conversation"></ng-container>
   </section>
 
@@ -9,6 +9,20 @@
   </section>
 
   <ng-template #conversation>
-    <div>message</div>
+    <section class="msg-container left">
+      <div class="message">
+        <p class="author subtitle">Foo :</p>
+        <p class="content">message</p>
+        <p class="date">10/20/30</p>
+      </div>
+    </section>
+
+    <section class="msg-container right">
+      <div class="message">
+        <p class="author subtitle">Bar :</p>
+        <p class="content">message</p>
+        <p class="date">10/20/30</p>
+      </div>
+    </section>
   </ng-template>
 </div>

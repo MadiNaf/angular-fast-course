@@ -7,12 +7,14 @@
   padding: 10px;
   border-radius: 10px;
 
-  .conversation-container {
+  .container {
+    box-sizing: border-box;
     width: 100%;
     min-height: 250px;
     border-radius: 6px;
-    background-color: #566573;
+    background-color: #34495E;
     margin-bottom: 10px;
+    padding: 16px;
   }
 
   .message-field {
@@ -37,6 +39,43 @@
       border: none;
       font-size: 18px;
       font-weight: 700;
+    }
+  }
+
+  .msg-container {
+    width: 100%;
+    display: flex;
+    align-items: center;
+
+    .message {
+      padding: 16px;
+      min-width: 200px;
+      max-width: 75%;
+    }
+
+    .author, .content {margin-bottom: 6px;}
+    .date {
+      font-size: 14px;
+      font-weight: 300;
+    }
+  }
+
+  .msg-container.left {
+    justify-content: flex-start;
+    
+    .message {
+      border-radius: 20px 20px 20px 0;
+      background-color: #566573;
+    }
+  }
+
+  .msg-container.right {
+    justify-content: flex-end;
+    
+    .message {
+      border-radius: 20px 20px 0 20px;
+      background-color: #283747;
+      color: #D6DBDF;
     }
   }
 }
