@@ -60,7 +60,7 @@
     height: 45px;
     margin: 10px 0;
     display: flex;
-    justify-content: start;
+    justify-content: flex-start;
     align-items: center;
 
     .user-status {
@@ -81,5 +81,4 @@
       color: #D6DBDF;
     }
   }
-  
 }

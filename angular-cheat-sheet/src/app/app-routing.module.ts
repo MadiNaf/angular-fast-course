@@ -5,6 +5,7 @@ import { ChatRoomComponent } from './views/chat-room/chat-room.component';
 const routes: Routes = [
   {path: 'chat-room', component: ChatRoomComponent},
   {path: '', redirectTo: 'chat-room', pathMatch: 'full'},
+  {path: '', redirectTo: 'chat-room', pathMatch: 'full'},
 ];
 
 @NgModule({
