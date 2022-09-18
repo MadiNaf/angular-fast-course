@@ -1,6 +1,6 @@
 <div id="chat">
-  <section class="message-container">
-
+  <section class="conversation-container">
+    <ng-container [ngTemplateOutlet]="conversation"></ng-container>
   </section>
 
   <section class="message-field">
@@ -8,4 +8,7 @@
     <button>send</button>
   </section>
 
+  <ng-template #conversation>
+    <div>message</div>
+  </ng-template>
 </div>

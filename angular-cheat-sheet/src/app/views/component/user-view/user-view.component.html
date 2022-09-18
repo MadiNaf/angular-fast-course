@@ -1,13 +1,17 @@
 <div id="user-view">
   <section class="tab-header">
     <ul>
-      <li class="subtitle active">All user</li>
-      <li class="subtitle">Connected user</li>
+      <li class="subtitle"
+          [ngClass]="[selectedTabUSer === tabs.ALL ? 'active' : '']"
+          (click)="switchTabUserView(tabs.ALL)">All user</li>
+      <li class="subtitle"
+          [ngClass]="[selectedTabUSer === tabs.CONNECTED ? 'active' : '']"
+          (click)="switchTabUserView(tabs.CONNECTED)">Connected user</li>
     </ul>
   </section>
 
   <section class="tab-body">
-    <ng-container *ngFor="let connectedUser of connectedUsers"
+    <ng-container *ngFor="let connectedUser of userToDisplay"
                   [ngTemplateOutlet]="userList"
                   [ngTemplateOutletContext]="{userSession: connectedUser}"></ng-container>
   </section>

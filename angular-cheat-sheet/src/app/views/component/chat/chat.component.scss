@@ -7,11 +7,11 @@
   padding: 10px;
   border-radius: 10px;
 
-  .message-container {
+  .conversation-container {
     width: 100%;
     min-height: 250px;
     border-radius: 6px;
-    background-color: #EAECEE;
+    background-color: #566573;
     margin-bottom: 10px;
   }
 
@@ -23,7 +23,7 @@
     #msg-field {
       width: 90% !important;
       border-radius: 6px;
-      background-color: #EAECEE;
+      background-color: #D5D8DC;
       padding: 6px;
       font-size: 18px;
       font-weight: 500;
@@ -33,6 +33,10 @@
       width: 8%;
       border-radius: 6px;
       text-transform: uppercase;
+      background-color: #A9DFBF;
+      border: none;
+      font-size: 18px;
+      font-weight: 700;
     }
   }
 }

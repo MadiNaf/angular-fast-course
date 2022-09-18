@@ -22,13 +22,14 @@
     li {
       cursor: pointer;
       color: #ABB2B9;
-      background-color: #34495E;
+      background-color: #283747;
       padding: 0;
       display: flex;
       justify-content: center;
       align-items: center;
       width: 50%;
       height: 50px;
+      transition: background 1s linear;
     }
 
     li:nth-child(1) {
@@ -40,8 +41,12 @@
     }
 
     li.active {
-      background-color: #283747;
+      background-color: #34495E;
       color: #D6DBDF;
+    }
+
+    li:hover {
+      color: #D5D8DC ;
     }
   }
 
