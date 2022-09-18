@@ -1,0 +1,11 @@
+#chat-room {
+  width: 98%;
+  padding: 1%;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+
+  #user-view { width: 32%; }
+
+  #chat-container { width: 66%; }
+}

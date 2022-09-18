@@ -1,0 +1,22 @@
+<div id="user-view">
+  <section class="tab-header">
+    <ul>
+      <li class="subtitle active">All user</li>
+      <li class="subtitle">Connected user</li>
+    </ul>
+  </section>
+
+  <section class="tab-body">
+    <ng-container *ngFor="let connectedUser of connectedUsers"
+                  [ngTemplateOutlet]="userList"
+                  [ngTemplateOutletContext]="{userSession: connectedUser}"></ng-container>
+  </section>
+
+  <ng-template #userList let-userSession="userSession">
+    <div class="user-session-status">
+      <div class="user-status" [ngClass]="[userSession.isConnected ? 'active' : 'inactive']"></div>
+      <p class="username">{{userSession.username}}</p>
+    </div>
+  </ng-template>
+</div>
+
