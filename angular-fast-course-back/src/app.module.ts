@@ -4,10 +4,11 @@ import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
 import { ChatModule } from './chat/chat.module';
 import { AuthService } from './auth/auth.service';
+import { ChatGateway } from './chat.gateway';
 
 @Module({
   imports: [UserModule, ChatModule],
   controllers: [AppController],
-  providers: [AppService, AuthService],
+  providers: [AppService, AuthService, ChatGateway],
 })
 export class AppModule {}

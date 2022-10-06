@@ -21,15 +21,18 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
-    "@nestjs/common": "^8.0.0",
+    "@nestjs/common": "^8.4.7",
     "@nestjs/core": "^8.0.0",
     "@nestjs/platform-express": "^8.0.0",
+    "@nestjs/platform-socket.io": "^9.1.4",
+    "@nestjs/websockets": "^9.1.4",
     "bcrypt": "^5.0.1",
     "jsonwebtoken": "^8.5.1",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^7.2.0",
-    "sqlite3": "^5.1.1"
+    "sqlite3": "^5.1.1",
+    "webpack": "^5.74.0"
   },
   "devDependencies": {
     "@nestjs/cli": "^8.0.0",

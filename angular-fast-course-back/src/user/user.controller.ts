@@ -36,6 +36,7 @@ export class UserController {
   @Post('/login')
   async loging(@Body() credentials: Credentials): Promise<User> {
     try {
+      // TODO Emmettre un événement pour l'ouverture d'un session.
       return await this.userService.Login(credentials.username, credentials.password);
     } catch (error) {
       return error;

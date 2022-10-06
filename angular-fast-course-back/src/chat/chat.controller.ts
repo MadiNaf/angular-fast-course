@@ -1,11 +1,13 @@
 import { Controller, Get, Post, Put, Param, Body, Delete } from '@nestjs/common';
+import { ChatGateway } from 'src/chat.gateway';
 import { Message, Topic } from 'src/model/chat.model';
 import { ChatService } from './chat.service';
 
 @Controller('chat')
 export class ChatController {
 
-  constructor(private readonly chatService: ChatService) {}
+  constructor(private readonly chatService: ChatService,
+              private readonly chatGateway: ChatGateway) {}
 
   @Get('/topic/all')
   async getAllTopics(): Promise<Topic []> {
@@ -39,6 +41,12 @@ export class ChatController {
 
   @Post('/message/new')
   async createMessage(@Body() message: Message): Promise<Message []> {
-    return await this.chatService.sendMessage(message);
+    try {
+      const msg = await this.chatService.sendMessage(message);
+      this.chatGateway.server.emit('messageToClient', message)
+      return msg;
+    } catch (e) {
+      return e;
+    }
   }
 }
