@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import * as fs from 'fs';
+import DbHelper from 'src/db/chatdb-helper';
 import { Message, Topic } from 'src/model/chat.model';
 
 @Injectable()
@@ -9,13 +10,13 @@ export class ChatService {
   private readonly messageDb = 'src/db/message.json';
 
   async getTopics(): Promise<Topic []> {
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
       try {
-        const jsonString = fs.readFileSync(this.topicDb, {encoding: 'utf-8'});
-        const topics: Array<Topic> = JSON.parse(jsonString);
+        const query = `SELECT * FROM topic ORDER BY id DESC;`;
+        const topics = await DbHelper.selectAll(query) as Array<Topic>;
         resolve(topics)
       } catch (error) {
-        throw reject('Cannot get topics');
+        reject('Error: Can not get topics.');
       }
     });
   }
@@ -23,21 +24,27 @@ export class ChatService {
   async getTopicByUser(userId: number): Promise<Topic []> {
     return new Promise( async (resolve, reject) => {
       if (isNaN(userId)) reject('User id must be a number.');
-
-      const topics = await this.getTopics();
-      const userTopics = topics.filter(topic => topic.userId === Number(userId));
-      resolve(userTopics);
+      try {        
+        const query = `SELECT * FROM topic WHERE user_id = ${userId} ORDER BY id DESC`;
+        const topics = await DbHelper.selectAll(query) as Array<Topic>;
+        resolve(topics);
+      } catch (error) {
+        reject('Error: Can not get topics');
+      }
     });
   }
 
   async getTopicById(topicId: number): Promise<Topic> {
     return new Promise( async (resolve, reject) => {
       if (isNaN(topicId)) reject('Topic id must be a number.');
-
-      const topics = await this.getTopics();
-      const topic = topics.find(topic => topic.id === Number(topicId));
-      if (!topic) reject('Topic not found.');
-      resolve(topic);
+      try {
+        const query = `SELECT * FROM topic WHERE id = ${topicId}`
+        const topic = await DbHelper.getOneElement(query);
+        if (!topic) reject('Error: Topic not found');
+        resolve(topic);
+      } catch (error) {
+        reject('Error: Can not get topics')
+      }
     });
   }
 
@@ -45,19 +52,14 @@ export class ChatService {
     return new Promise(async (resolve, reject) => {
       if (!topic) reject('Invalid topic');
       try {
-        const topics = await this.getTopics();
-        topic = {
-          ...topic,
-          id: topics.length + 1,
-          createdAt: this.geTimesTamp(),
-          updatedAt: this.geTimesTamp()
-        }
-        topics.push(topic)
-        const topicsString = JSON.stringify(topics);
-        fs.writeFileSync(this.topicDb, topicsString);
-        resolve(topics);
+        const { userId, title, author } = topic;
+        const createdAt = this.geTimesTamp();
+        const updatedAt = createdAt;
+        const query = `INSERT INTO topic (user_id, title, author, creatAt, updatedAt) VALUES (?, ?, ?, ?, ?);`;
+        const dbRes = await DbHelper.insertInto(query, [userId.toString(), title, author, createdAt, updatedAt]);
+        resolve(dbRes);
       } catch (error) {
-        reject('Cannot create topic');
+        reject('Error: Cannot create topic');
       }
     });
   }
@@ -104,13 +106,13 @@ export class ChatService {
   }
   
   async getMessages(): Promise<Message []> {
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
       try {
-        const jsonString = fs.readFileSync(this.messageDb, {encoding: 'utf-8'});
-        const messages: Array<Message> = JSON.parse(jsonString);
+        const query = `SELECT * FROM message ORDER BY id DESC;`;
+        const messages = await DbHelper.selectAll(query) as Array<Message>;
         resolve(messages)
       } catch (error) {
-        throw reject('Cannot get Messages');
+        reject('Error: Can not get messages.');
       }
     });
   }
@@ -118,26 +120,25 @@ export class ChatService {
   async getMessagesByTopic(topicId: number): Promise<Message []> {
     return new Promise( async (resolve, reject) => {
       if (isNaN(topicId)) reject('Topic id must be a number.');
-      const messages = await this.getMessages();
-      const found = messages.filter(msg => msg.topicId === Number(topicId));
-      resolve(found);
+      try {
+        const query = `SELECT * FROM message WHERE id  = ${topicId} ORDER BY id DESC;`;
+        const messages = await DbHelper.selectAll(query) as Array<Message>;
+        resolve(messages)
+      } catch (error) {
+        reject('Error: Can not get messages.');
+      }
     });
   }
 
   async sendMessage(message: Message): Promise<Message []> {
-    return new Promise(async (resolve, reject) => {
+    return new Promise(async (resolve, reject) => {  
       if (!message) reject('Invalid messge');
       try {
-        const messages = await this.getMessages();
-        message = {
-          ...message,
-          id: messages.length + 1,
-          createdAt: this.geTimesTamp(),
-        }
-        messages.push(message)
-        const messagesString = JSON.stringify(messages);
-        fs.writeFileSync(this.topicDb, messagesString);
-        resolve(messages);
+        const { userId, topicId,content, author} = message;
+        const createdAt = this.geTimesTamp();
+        const query = `INSERT INTO message (user_id, topic_id, content, author, createdAt) VALUES (?, ?, ?, ?, ?)`;
+        const dbRes = await DbHelper.insertInto(query, [userId.toString(), topicId.toString(),content, author, createdAt]);
+        resolve(dbRes);
       } catch (error) {
         reject('Cannot create topic');
       }
@@ -146,8 +147,7 @@ export class ChatService {
 
   private geTimesTamp(): string {
     try {
-      const date = new Date();
-      return `${date.getTime()}`;
+      return new Date().getTime().toString();
     } catch (error) {
       return ''; 
     }

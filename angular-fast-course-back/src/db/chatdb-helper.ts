@@ -11,7 +11,7 @@ export default abstract class DbHelper {
     });
   }
 
-  public static insertOrUpdate(query: string, values: Array<string>): Promise<any> {
+  public static insertInto(query: string, values: Array<string>): Promise<any> {
     return new Promise((resolve, reject) => {
       try {
         db.run(query, values);
@@ -20,6 +20,36 @@ export default abstract class DbHelper {
         reject(error);
       }
     });
+  }
+
+  public static update(query: string): Promise<any> {
+    return new Promise((resolve, reject) => {
+      try {
+        db.run(query);
+        resolve(true);
+      } catch (error) {
+        reject(error);
+      }
+    });
+  }
+
+  public static getOneElement(query: string): Promise<any> {
+    return new Promise((resolve, reject) => {
+      try {
+        db.get(query, (error, row) => {
+          if(error) reject(error);
+
+          resolve(row);
+        });
+      } catch (error) {
+        reject(error);
+      }
+    });
+  }
+
+
+  public static deleteElement(query: string): void {
+    // TODO
   }
 
 }
