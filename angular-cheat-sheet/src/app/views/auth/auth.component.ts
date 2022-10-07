@@ -7,9 +7,16 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AuthComponent implements OnInit {
 
+  public isSignIn: boolean = true;
+  public isSignUp: boolean = false;
+
   constructor() { }
 
   ngOnInit(): void {
   }
 
+  public handleAuthForm(isCurrentFormSignIn: boolean): void {
+    this.isSignIn = !isCurrentFormSignIn;
+    this.isSignUp = isCurrentFormSignIn;
+  }
 }

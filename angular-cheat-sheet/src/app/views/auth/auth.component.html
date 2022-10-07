@@ -1,3 +1,11 @@
 <div id="authentication">
-  <app-login></app-login>
+  <section class="auth-sign-in" *ngIf="isSignIn">
+    <app-login></app-login>
+    <span class="auth-choice" (click)="handleAuthForm(true)">I don't have an account yet.</span>
+  </section>
+
+  <section class="auth-sign-up" *ngIf="isSignUp">
+    <app-signup></app-signup>
+    <span class="auth-choice" (click)="handleAuthForm(false)">I already have an account.</span>
+  </section>
 </div>

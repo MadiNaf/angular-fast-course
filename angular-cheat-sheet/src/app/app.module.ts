@@ -12,6 +12,7 @@ import { LoginComponent } from './views/auth/components/login/login.component';
 import { InputCustomComponent } from './common/components/input-custom/input-custom.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { SignupComponent } from './views/auth/components/signup/signup.component';
 
 @NgModule({
   declarations: [
@@ -23,6 +24,7 @@ import { HttpClientModule } from '@angular/common/http';
     AuthComponent,
     LoginComponent,
     InputCustomComponent,
+    SignupComponent,
   ],
   imports: [
     BrowserModule,
