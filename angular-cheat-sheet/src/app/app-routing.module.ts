@@ -1,11 +1,12 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { AuthComponent } from './views/auth/auth.component';
 import { ChatRoomComponent } from './views/chat-room/chat-room.component';
 
 const routes: Routes = [
+  {path: 'authentication', component: AuthComponent},
   {path: 'chat-room', component: ChatRoomComponent},
-  {path: '', redirectTo: 'chat-room', pathMatch: 'full'},
-  {path: '', redirectTo: 'chat-room', pathMatch: 'full'},
+  {path: '', redirectTo: 'authentication', pathMatch: 'full'},
 ];
 
 @NgModule({
