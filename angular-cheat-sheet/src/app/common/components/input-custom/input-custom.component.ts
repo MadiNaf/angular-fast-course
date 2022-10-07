@@ -20,14 +20,11 @@ export class InputCustomComponent extends ControlValueAccesorConnectorComponent 
   @Input() placeholder: string = '';
   @Input() width: string = '280';
 
-  customWidth: string = '';
-
   constructor(injector: Injector) {
     super(injector);
   }
 
   ngOnInit(): void {
-    // this.customWidth = `width: ${this.width};`;
   }
 
 }

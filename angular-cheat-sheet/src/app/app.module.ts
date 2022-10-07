@@ -11,6 +11,7 @@ import { AuthComponent } from './views/auth/auth.component';
 import { LoginComponent } from './views/auth/components/login/login.component';
 import { InputCustomComponent } from './common/components/input-custom/input-custom.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]

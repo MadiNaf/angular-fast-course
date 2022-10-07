@@ -66,8 +66,8 @@ export class UserService extends UserGuards {
         const isValidPwd = await this.authService.isValidCredentials(password, user.password);
         if (!isValidPwd) reject('Invalid username or password.');
 
-        const token = ` ?, ?, ?, ?);`;
-        const query = `UPDATE user SET token = ${token} WHERE id = ${user.id} AND username ='${user.username}';`;
+        const token = user?.token;
+        const query = `UPDATE user SET token ='${token}' WHERE id = ${user.id} AND username ='${user.username}';`;
         const dbRes = await DbHelper.update(query);
         if (!dbRes) reject('ERROR: Cannot login.');
 
