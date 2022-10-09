@@ -13,6 +13,7 @@ import { InputCustomComponent } from './common/components/input-custom/input-cus
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { SignupComponent } from './views/auth/components/signup/signup.component';
+import { AuthGuardService } from './common/services/auth-guard.service';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,7 @@ import { SignupComponent } from './views/auth/components/signup/signup.component
     ReactiveFormsModule,
     HttpClientModule
   ],
-  providers: [],
+  providers: [AuthGuardService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

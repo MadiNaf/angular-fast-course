@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { StoreService } from 'src/app/common/services/store.service';
 import { IUser } from 'src/app/model/user.model';
 import { AuthService } from 'src/app/services/auth.service';
 
@@ -18,7 +19,9 @@ export class SignupComponent implements OnInit {
     passwordControl: new FormControl('', Validators.required),
     pwdConfirmationControl: new FormControl('', Validators.required)
   });
-  constructor(private authService: AuthService, private route: Router) { }
+  constructor(private authService: AuthService,
+              private route: Router,
+              private storeService: StoreService) { }
 
   ngOnInit(): void {
   }
@@ -44,17 +47,19 @@ export class SignupComponent implements OnInit {
   }
 
   onSubmitSignUpForm(): void {
-    console.log('____signup_form_group :: ', this.signUpForm);
-    const user: IUser = {
-      firstname: this.firstnameControl.value,
-      lastname: this.lastnameControl.value,
-      username: this.usernameControl.value,
-      password: this.passwordControl.value
+    const password = this.passwordControl.value;
+    if (password === this.pwdConfirmationControl.value) {
+      const user: IUser = {
+        firstname: this.firstnameControl.value,
+        lastname: this.lastnameControl.value,
+        username: this.usernameControl.value,
+        password: this.passwordControl.value
+      }
+      this.authService.signUp(user).subscribe(user => {
+        this.storeService.user = user;
+        this.route.navigate(['chat-room']);
+      });
     }
-    this.authService.signUp(user).subscribe(user => {
-      console.log('____signUp_user : ', user);
-      this.route.navigate(['chat-room']);
-    });
   }
 
 }
