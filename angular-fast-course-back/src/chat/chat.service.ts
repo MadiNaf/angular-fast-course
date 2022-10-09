@@ -7,6 +7,7 @@ import { Message, Topic } from 'src/model/chat.model';
 export class ChatService {
 
   private readonly topicDb = 'src/db/topic.json';
+  private readonly messageDb = 'src/db/message.json';
 
   async getTopics(): Promise<Topic []> {
     return new Promise(async (resolve, reject) => {
