@@ -1,0 +1,37 @@
+<div id="sign-up">
+  <form [formGroup]="signUpForm">
+    <input-custom inputId="firstname"
+                  lablel="Firstname"
+                  inputType="text"
+                  width="400"
+                  [formControl]="firstnameControl"></input-custom>
+  
+    <input-custom inputId="lastname"
+                  lablel="Lastname"
+                  inputType="text"
+                  width="400"
+                  [formControl]="lastnameControl"></input-custom>
+    
+    <input-custom inputId="username"
+                  lablel="Username"
+                  inputType="text"
+                  width="400"
+                  [formControl]="usernameControl"></input-custom>
+
+    <input-custom inputId="password"
+                  lablel="Password"
+                  inputType="password"
+                  width="400"
+                  [formControl]="passwordControl"></input-custom>
+
+    <input-custom inputId="password-confirmation"
+                  lablel="Confirmation password"
+                  inputType="password"
+                  width="400"
+                  [formControl]="pwdConfirmationControl"></input-custom>
+  </form>
+
+  <section class="btn-container">
+    <button class="btn" (click)="onSubmitSignUpForm()">valider</button>
+  </section>
+</div>
