@@ -1,18 +1,18 @@
 <div id="chat">
   <section class="container">
-    <ng-container [ngTemplateOutlet]="conversation"></ng-container>
+    <ng-container [ngTemplateOutlet]="conversation" [ngTemplateOutletContext]="{message: message}"></ng-container>
   </section>
 
   <section class="message-field">
-    <textarea name="" id="msg-field" rows="6"></textarea>
+    <textarea name="message" id="msg-field" rows="6" (change)="onChangeMessage($event)">{{message}}</textarea>
     <button>send</button>
   </section>
 
-  <ng-template #conversation>
+  <ng-template #conversation let-message="message">
     <section class="msg-container left">
       <div class="message">
         <p class="author subtitle">Foo :</p>
-        <p class="content">message</p>
+        <p class="content">{{message}}</p>
         <p class="date">10/20/30</p>
       </div>
     </section>
