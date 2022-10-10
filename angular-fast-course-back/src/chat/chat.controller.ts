@@ -1,4 +1,5 @@
-import { Controller, Get, Post, Put, Param, Body, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Put, Param, Body, Delete, UseGuards } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { Message, Topic } from 'src/model/chat.model';
 import { ChatService } from './chat.service';
 
@@ -7,7 +8,9 @@ export class ChatController {
 
   constructor(private readonly chatService: ChatService) {}
 
+  //   @ApiBearerAuth()
   @Get('/topic/all')
+  @UseGuards(AuthGuard('jwt'))
   async getAllTopics(): Promise<Topic []> {
     return await this.chatService.getTopics();
   }
