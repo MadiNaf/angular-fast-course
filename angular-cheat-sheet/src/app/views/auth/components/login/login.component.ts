@@ -41,7 +41,7 @@ export class LoginComponent implements OnInit {
     };
     this.authService.signIn(signInRequest).subscribe(signIn => {
       this.storeService.user = signIn;
-      this.route.navigate(['chat-room']);
+      this.route.navigate(['topics']);
     });
   }
 

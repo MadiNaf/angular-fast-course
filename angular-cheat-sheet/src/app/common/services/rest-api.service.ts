@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { ISignInRequest } from 'src/app/model/auth.model';
@@ -9,12 +9,12 @@ import { IUser } from 'src/app/model/user.model';
 })
 export class RestApiService {
 
-  private readonly apiUrl = 'http://localhost:3000/'
+  private readonly apiUrl = 'http://localhost:3000/';
 
   constructor(private http: HttpClient) { }
 
   public signIn(signInRequest: ISignInRequest): Observable<IUser> {
-    return this.http.post(`${this.apiUrl}user/login`, signInRequest).pipe(
+    return this.http.post(`${this.apiUrl}auth/login`, signInRequest).pipe(
       map(userResponse  => {
         const user: IUser = userResponse as IUser;
         const userInfo = {id: user?.id, accessToken: user?.token};
@@ -25,7 +25,7 @@ export class RestApiService {
   }
 
   public signUp(user: IUser): Observable<IUser> {
-    return this.http.post(`${this.apiUrl}user/new`, user).pipe(
+    return this.http.post(`${this.apiUrl}auth/signup`, user).pipe(
       map(userResponse  => {
         const user: IUser = userResponse as IUser;
         const userInfo = {id: user?.id, accessToken: user?.token};
@@ -33,5 +33,19 @@ export class RestApiService {
         return user as IUser;
       })
     );
+  }
+
+  public getSessionStorage(): string {
+    const stringSession = sessionStorage.getItem('userInfo');
+    const session = stringSession ? JSON.parse(stringSession) : null;
+    return session && session?.accessToken ? session?.accessToken : '';
+  }
+
+  public getHeaderRequest(): HttpHeaders {
+    const accessToken = this.getSessionStorage();
+    return new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${accessToken}`
+    });
   }
 }

@@ -20,9 +20,7 @@ export class AuthService {
   }
 
   public getUserSession(): boolean {
-    const stringSession = sessionStorage.getItem('userInfo');
-    const session = stringSession ? JSON.parse(stringSession) : null;
-    console.log(session)
-    return session && session?.accessToken ? true : false;
+    const accessToken = this.commonRestApiService.getSessionStorage();
+    return accessToken ? true : false;
   }
 }

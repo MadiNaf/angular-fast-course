@@ -57,7 +57,7 @@ export class SignupComponent implements OnInit {
       }
       this.authService.signUp(user).subscribe(user => {
         this.storeService.user = user;
-        this.route.navigate(['chat-room']);
+        this.route.navigate(['topics']);
       });
     }
   }
