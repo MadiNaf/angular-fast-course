@@ -55,7 +55,7 @@ export class ChatService {
         const { userId, title, author } = topic;
         const createdAt = this.geTimesTamp();
         const updatedAt = createdAt;
-        const query = `INSERT INTO topic (user_id, title, author, creatAt, updatedAt) VALUES (?, ?, ?, ?, ?);`;
+        const query = `INSERT INTO topic (user_id, title, author, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?);`;
         const dbRes = await DbHelper.insertInto(query, [userId.toString(), title, author, createdAt, updatedAt]);
         resolve(dbRes);
       } catch (error) {
@@ -68,16 +68,15 @@ export class ChatService {
     return new Promise(async (resolve, reject) => {
       if (isNaN(topicId)) reject('Topic id must be a number.');
       try {
-        let topicToUpdate = await this.getTopicById(topicId);
-        if (!topicToUpdate) reject('Topic not found');
-        topicToUpdate = {...topic, updatedAt: this.geTimesTamp()};
+        const currentTopic = await this.getTopicById(topic.id);
+        if (!currentTopic.id) reject('Topic not found.');
 
-        const topics = await this.getTopics();
-        const index = topics.indexOf(topicToUpdate);
-        if (index < 0) reject('Topic not found');
-        topics[index] = topicToUpdate;
-        const topicsString = JSON.stringify(topics);
-        fs.writeFileSync(this.topicDb, topicsString);
+        const title = topic.title;
+        const updatedAt = this.geTimesTamp();
+        const query = `UPDATE topic SET title ='${title}', updatedAt = '${updatedAt}'
+                      WHERE id = ${topic.id} AND author ='${topic.author}';`;
+        const dbRes = await DbHelper.update(query);
+        if (!dbRes) reject('Cannot update topic');
         resolve(topic);
       } catch (error) {
         reject('Cannot update topic');
@@ -85,23 +84,23 @@ export class ChatService {
     });
   }
 
-  async delteTopic(topicId: number): Promise<boolean> {
+  async delteTopic(topicId: number, username): Promise<boolean> {
     return new Promise(async (resolve, reject) => {
       if (isNaN(topicId)) reject('Topic id must be a number.');
-      try {
-        let topicToDelete = await this.getTopicById(topicId);
-        if (!topicToDelete) reject('Topic not found');
+      // try {
+      //   const currentTopic = await this.getTopicById(topic.id);
+      //   if (!currentTopic.id) reject('Topic not found.');
 
-        const topics = await this.getTopics();
-        const index = topics.indexOf(topicToDelete);
-        if (index < 0) reject('Topic not found');
-        topics.splice(index, 1);
-        const topicsString = JSON.stringify(topics);
-        fs.writeFileSync(this.topicDb, topicsString);
-        resolve(true);
-      } catch (error) {
-        reject('Cannot update topic');
-      }
+      //   const topics = await this.getTopics();
+      //   const index = topics.indexOf(topicToDelete);
+      //   if (index < 0) reject('Topic not found');
+      //   topics.splice(index, 1);
+      //   const topicsString = JSON.stringify(topics);
+      //   fs.writeFileSync(this.topicDb, topicsString);
+      //   resolve(true);
+      // } catch (error) {
+      //   reject('Cannot update topic');
+      // }
     });
   }
   

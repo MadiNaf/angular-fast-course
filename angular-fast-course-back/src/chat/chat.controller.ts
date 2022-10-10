@@ -34,9 +34,9 @@ export class ChatController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Delete('/topic/:id')
-  async delteTopic(@Param('id') id: number): Promise<boolean> {
-    return await this.chatService.delteTopic(id);
+  @Delete('/topic/:id/:username')
+  async delteTopic(@Param('id') id: number, @Param('username') username: string): Promise<boolean> {
+    return await this.chatService.delteTopic(id, username);
   }
 
   @UseGuards(JwtAuthGuard)
