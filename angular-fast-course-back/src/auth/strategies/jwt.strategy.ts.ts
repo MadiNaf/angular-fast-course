@@ -1,8 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import { PassportStrategy } from '@nestjs/passport'
-// import { Strategy } from 'passport-local'
 import { Strategy, ExtractJwt } from 'passport-jwt'
-import { SECRET_KEY } from './constent'
+import { JWT_CONSTENT } from '../constent'
 
 Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
@@ -12,12 +11,11 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       // get JWT from Header 
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
-      secretOrKey: SECRET_KEY
+      secretOrKey: JWT_CONSTENT.secret
     })
   }
 
-  validate(payload: any): any {
-    console.log('__GUARD_PAYLOAD ::: ', payload);
-    return payload;
+  async validate(payload: any) {
+    return { userId: payload.sub, username: payload.username };
   }
 }

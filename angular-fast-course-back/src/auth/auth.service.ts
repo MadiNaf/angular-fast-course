@@ -1,12 +1,15 @@
 import { Injectable } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
-import * as jwt from 'jsonwebtoken';
-import { SALT_ROUNDS, SECRET_KEY } from './constent';
+import { User, UserJwtPayload } from 'src/model/user.model';
+import { UserService } from 'src/user/user.service';
+import { JWT_CONSTENT, SALT_ROUNDS } from './constent';
 
 @Injectable()
 export class AuthService {
 
-  constructor() {}
+  constructor(private userService: UserService,
+              private jwtService: JwtService) {}
 
   /**
    * Generate hashed password
@@ -40,10 +43,10 @@ export class AuthService {
     });
   }
 
-  async generateNewToken(payload: string): Promise<string> {
+  async generateNewToken(payload: UserJwtPayload): Promise<string> {
     return new Promise(async (resolve, reject) => {
       try {
-        const token = await jwt.sign({data: payload}, SECRET_KEY, {expiresIn: '3h'});
+        const token = this.jwtService.sign(payload);
         resolve(token);
       } catch (e) {
         reject('Error: Cannot generate token.');
@@ -51,21 +54,64 @@ export class AuthService {
     })
   }
 
-  async verifyToken(token: string, username): Promise<boolean> {
+  async isValidCredentials(source: string, target: string): Promise<boolean> {
+    return await this.comparePassword(source, target);
+  }
+
+  async validateUser(username: string, password: string): Promise<User> {
     return new Promise(async (resolve, reject) => {
+      if (!this.userService.isValidUsernmae(username) || !this.userService.isValidPassword(password)) {
+        reject('Invalid username or password.');
+      }
       try {
-        const tokenInfo = await jwt.verify(token, SECRET_KEY);
-        const isValid = tokenInfo?.data === username;
-        resolve(isValid);
-      } catch (e) {
-        const codeError = e.toString().split(':')[0]
-        if (codeError == 'TokenExpiredError') reject(false);
-        reject(false);
+        const user = await this.userService.getUserByUsername(username);
+        if (!user) reject('Invalid username or password.');
+
+        const isValidPwd = await this.isValidCredentials(password, user.password);
+        if (!isValidPwd) reject('Invalid username or password.');
+
+        resolve({...user, password: '***'});
+      } catch (error) {
+        reject(error);
       }
     });
   }
 
-  async isValidCredentials(source: string, target: string): Promise<boolean> {
-    return await this.comparePassword(source, target);
+  async login(user: User): Promise<User> {
+    const payload = { username: user.username, sub: user.id };
+    const token = this.jwtService.sign(payload);
+    user['token'] = token; 
+    const isTokenUpdated = this.userService.updateUserToken(user);
+    if (!isTokenUpdated) throw new Error('Cannot save user token');
+    return user;
+  }
+
+  async SignUp(user: User): Promise<User> {
+    return new Promise(async (resolve, reject) => {
+      if (!user) reject('Error: user should not be null.')
+      if (!this.userService.isValidPassword(user.password)) reject('Error: Unacceptable password.')
+      if (!this.userService.isValidName(user.firstname)) reject('Error: Invalid first name.');
+      if (!this.userService.isValidName(user.lastname)) reject('Error: Invalid last name.');
+      if (!this.userService.isValidName(user.username)) reject('Error: Invalid username.');
+      if (!this.userService.isValidName(user.password)) reject('Error: Weak password.');
+
+      const users = await this.userService.getUsers();
+      if (!this.userService.isUniqueUserName(user.username, users)) reject('This username already exist');
+
+      try {
+        // Get hashe password
+        const pwd = await this.getHashedPassword(user.password);
+
+        // Create a new toekn
+        const payload = { username: user.username, sub: user.id };
+        const token = await this.generateNewToken(payload);
+        user = { ...user, token: token, password: pwd };
+        const isCreated = await this.userService.createUser(user);
+        if (!isCreated) throw new Error('Cannot save user');
+        resolve(user)
+      } catch (error) {
+        reject('ERROR: Sign up.');
+      }
+    });
   }
 }

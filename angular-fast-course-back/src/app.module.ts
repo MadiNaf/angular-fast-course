@@ -4,11 +4,14 @@ import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
 import { ChatModule } from './chat/chat.module';
 import { AuthService } from './auth/auth.service';
-import { JwtStrategy } from './auth/jwt.strategy.ts';
+import { JwtStrategy } from './auth/strategies/jwt.strategy.ts';
+import { AuthModule } from './auth/auth.module';
+import { UserService } from './user/user.service';
+import { JwtService } from '@nestjs/jwt';
 
 @Module({
-  imports: [UserModule, ChatModule],
+  imports: [UserModule, ChatModule, AuthModule],
   controllers: [AppController],
-  providers: [AppService, AuthService, JwtStrategy],
+  providers: [AppService, AuthService, JwtStrategy, UserService, JwtService],
 })
 export class AppModule {}
