@@ -1,0 +1,23 @@
+#navbar {
+  background-color: rgba($color: #ABB2B9, $alpha: 0.2);
+  height: 65px;
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  font-size: 20px;
+
+  .nav-left-items, .nav-right-items {
+    cursor: pointer;
+  }
+
+  .nav-items {
+    text-decoration: none;
+    color: white;
+  }
+
+  .nav-items:hover {
+    text-decoration: none;
+    color: gray ;
+  }
+}
