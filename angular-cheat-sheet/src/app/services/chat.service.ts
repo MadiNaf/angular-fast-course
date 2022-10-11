@@ -17,4 +17,9 @@ export class ChatService {
     const headers = this.commonRestApiService.getHeaderRequest();
     return this.http.get(`${this.apiUrl}chat/topic/all`, { headers: headers }) as Observable<Array<any>>;
   }
+
+  public createTopic(topic: any): Observable<any> {
+    const headers = this.commonRestApiService.getHeaderRequest();
+    return this.http.post(`${this.apiUrl}chat/topic/new`, topic, {headers: headers});
+  }
 }

@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
-import { ISignInRequest } from 'src/app/model/auth.model';
+import { ISignInRequest, IUserSession } from 'src/app/model/auth.model';
 import { IUser } from 'src/app/model/user.model';
 
 @Injectable({
@@ -35,17 +35,22 @@ export class RestApiService {
     );
   }
 
-  public getSessionStorage(): string {
+  public getSessionStorage(): IUserSession {
     const stringSession = sessionStorage.getItem('userInfo');
     const session = stringSession ? JSON.parse(stringSession) : null;
-    return session && session?.accessToken ? session?.accessToken : '';
+    return session;
   }
 
   public getHeaderRequest(): HttpHeaders {
-    const accessToken = this.getSessionStorage();
+    const { accessToken } = this.getSessionStorage() || '';
     return new HttpHeaders({
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${accessToken}`
     });
+  }
+
+  getUserById(id: number): Observable<IUser> {
+    const headers = this.getHeaderRequest();
+    return this.http.get(`${this.apiUrl}user/profile/${id}`, {headers: headers}) as Observable<IUser>;
   }
 }

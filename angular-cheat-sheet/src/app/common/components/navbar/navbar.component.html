@@ -3,7 +3,7 @@
     <a routerLink="/topics" class="nav-items">Topics</a>
   </section>
   <section class="nav-right-items">
-    <a routerLink="/authentication" class="nav-items">Login</a>
-    <!-- <p class="nav-items">Sign up</p> -->
+    <a *ngIf="!isUserConnected" routerLink="/authentication" class="nav-items">Login</a>
+    <p *ngIf="isUserConnected" class="nav-items">Log out</p>
   </section>
 </div>
