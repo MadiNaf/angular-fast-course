@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { StoreService } from 'src/app/common/services/store.service';
 import { ChatService } from 'src/app/services/chat.service';
 
@@ -17,7 +18,8 @@ export class TopicComponent implements OnInit {
 
 
   constructor(private chatService: ChatService,
-              private storeService: StoreService) { }
+              private storeService: StoreService,
+              private router: Router) { }
 
   ngOnInit(): void {
     this.getTopics();
@@ -49,6 +51,11 @@ export class TopicComponent implements OnInit {
       this.toggleEditeMode();
       this.isLoading = false;
     }, () => { this.isLoading = false;});
+  }
+
+  navToChatroom(topic: any) {
+    this.storeService.setSelectedTopic(topic);
+    this.router.navigate(['chat-room'])
   }
 
 }

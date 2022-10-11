@@ -3,13 +3,15 @@ import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { ISignInRequest, IUserSession } from 'src/app/model/auth.model';
 import { IUser } from 'src/app/model/user.model';
+import { io } from 'socket.io-client'
 
 @Injectable({
   providedIn: 'root'
 })
 export class RestApiService {
 
-  private readonly apiUrl = 'http://localhost:3000/';
+  public readonly apiUrl = 'http://localhost:3000/';
+  public readonly socket = io(this.apiUrl)
 
   constructor(private http: HttpClient) { }
 

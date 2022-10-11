@@ -1,7 +1,7 @@
 <div *ngIf="!isLoading" id="topic">
   <div>
     <section class="topic-container">
-      <div *ngFor="let topic of allTopics" class="single-topic">
+      <div *ngFor="let topic of allTopics" class="single-topic" (click)="navToChatroom(topic)">
         <h3 class="topic-title">{{topic.title}}</h3>
         <div class="topic-info">        
           <p>last update : {{topic.updatedAt}} </p>
@@ -17,7 +17,7 @@
     </section>
   
     <section class="topic-add-action">
-      <button class="btn" (click)="onClickCreateTopic()">create new topic</button>
+      <button class="btn" (click)="onClickCreateTopic()">create a new topic</button>
     </section>
   </div>
 </div>
