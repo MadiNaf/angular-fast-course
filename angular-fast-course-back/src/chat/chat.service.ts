@@ -1,13 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import * as fs from 'fs';
 import DbHelper from 'src/db/chatdb-helper';
 import { Message, Topic } from 'src/model/chat.model';
 
 @Injectable()
 export class ChatService {
-
-  private readonly topicDb = 'src/db/topic.json';
-  private readonly messageDb = 'src/db/message.json';
 
   async getTopics(): Promise<Topic []> {
     return new Promise(async (resolve, reject) => {
@@ -101,6 +97,7 @@ export class ChatService {
       // } catch (error) {
       //   reject('Cannot update topic');
       // }
+      // TODO Supprimer aussi les messages qui corresponds à ce topic.
     });
   }
   

@@ -8,10 +8,11 @@ import { JwtStrategy } from './auth/strategies/jwt.strategy.ts';
 import { AuthModule } from './auth/auth.module';
 import { UserService } from './user/user.service';
 import { JwtService } from '@nestjs/jwt';
+import { AppGateway } from './app.gateway';
 
 @Module({
   imports: [UserModule, ChatModule, AuthModule],
   controllers: [AppController],
-  providers: [AppService, AuthService, JwtStrategy, UserService, JwtService],
+  providers: [AppService, AuthService, JwtStrategy, UserService, JwtService, AppGateway],
 })
 export class AppModule {}
