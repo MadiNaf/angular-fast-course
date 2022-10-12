@@ -16,3 +16,8 @@ export interface Credentials {
   username: string;
   password: string;
 }
+
+export interface UserJwtPayload {
+  username: string;
+  sub: number;
+}

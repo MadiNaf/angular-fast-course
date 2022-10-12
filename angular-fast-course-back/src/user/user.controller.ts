@@ -1,4 +1,5 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { ConnectedUser, Credentials, User } from 'src/model/user.model';
 import { UserService } from './user.service';
 
@@ -6,6 +7,7 @@ import { UserService } from './user.service';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  @UseGuards(JwtAuthGuard)
   @Get('/all')
   async getAllUsers(): Promise<User []> {
     try {
@@ -15,31 +17,13 @@ export class UserController {
     }
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get('/profile/:id')
   async getOneUser(@Param('id') id: number): Promise<User> {
     try {
       return await this.userService.getUserById(id);
     } catch (error) {
      return error; 
-    }
-  }
-
-  @Post('/new')
-  async createUser(@Body() user: User): Promise<User> {
-    try {
-      return await this.userService.SignUp(user);
-    } catch (error) {
-      return error;
-    }
-  }
-
-  @Post('/login')
-  async loging(@Body() credentials: Credentials): Promise<User> {
-    try {
-      // TODO Emmettre un événement pour l'ouverture d'un session.
-      return await this.userService.Login(credentials.username, credentials.password);
-    } catch (error) {
-      return error;
     }
   }
 

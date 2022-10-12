@@ -1,0 +1,9 @@
+<div id="navbar">
+  <section class="nav-left-items">
+    <a routerLink="/topics" class="nav-items">Topics</a>
+  </section>
+  <section class="nav-right-items">
+    <a *ngIf="!isUserConnected" routerLink="/authentication" class="nav-items">Login</a>
+    <p *ngIf="isUserConnected" class="nav-items">Log out</p>
+  </section>
+</div>
