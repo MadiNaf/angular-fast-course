@@ -1,4 +1,4 @@
-import { Controller, Post, UseGuards, Request, Body } from '@nestjs/common';
+import { Controller, Post, Get, UseGuards, Request, Body, Param } from '@nestjs/common';
 import { User } from 'src/model/user.model';
 import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './guards/local-auth.guard';
@@ -21,5 +21,13 @@ export class AuthController {
     } catch (error) {
       return error;
     }
+  }
+
+  @Get('/verify/:id')
+  async verifyUserToken(@Request() req, @Param('id') userid: number): Promise<boolean> {
+    const authorization = req?.headers?.authorization;
+    const authArr = authorization?.split(' ');
+    const accessToken = authArr?.length ? authArr[1] : [];
+    return this.authService.verifyToken(accessToken, userid);
   }
 }

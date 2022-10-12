@@ -20,15 +20,17 @@ export class AppComponent implements OnInit{
 
   handleReload(): void {
     const userSession = this.commonRestApiService.getSessionStorage();
-    if (!this.storeService.user && userSession) {
-      const userId = userSession ? userSession?.id : null;
-      console.log(userId)
-      if (!userId) return ;
+    this.storeService.user$.subscribe(user => {
+      if (!user && userSession) {
+        const userId = userSession ? userSession?.id : null;
+        console.log(userId)
+        if (!userId) return ;
   
-      this.commonRestApiService.getUserById(Number(userId)).subscribe(user => {
-        this.storeService.user = user;
-      });
-    }
+        this.commonRestApiService.getUserById(Number(userId)).subscribe(user => {
+          this.storeService.setUser(user);
+        });
+      }
+    });
   }
 
 }

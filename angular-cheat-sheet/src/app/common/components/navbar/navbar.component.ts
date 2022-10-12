@@ -13,7 +13,9 @@ export class NavbarComponent implements OnInit {
   constructor(private storeService: StoreService) { }
 
   ngOnInit(): void {
-    this.isUserConnected = !!this.storeService.user
+    this.storeService.user$.subscribe(user => {
+      this.isUserConnected = !!(user?.id && user?.username);
+    });
   }
 
 }

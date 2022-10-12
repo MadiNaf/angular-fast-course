@@ -1,16 +1,20 @@
 import { Injectable } from '@nestjs/common';
+import { AppGateway } from 'src/app.gateway';
 import DbHelper from 'src/db/chatdb-helper';
+import { MessageDto, TopicDto } from 'src/model/chat.dto';
 import { Message, Topic } from 'src/model/chat.model';
 
 @Injectable()
 export class ChatService {
 
+  constructor(private readonly appGateway: AppGateway) {}
+  
   async getTopics(): Promise<Topic []> {
     return new Promise(async (resolve, reject) => {
       try {
         const query = `SELECT * FROM topic ORDER BY id DESC;`;
-        const topics = await DbHelper.selectAll(query) as Array<Topic>;
-        resolve(topics)
+        const topics = await DbHelper.selectAll(query) as Array<TopicDto>;
+        resolve(topics.map(topic => { return this.transformToTopicObject(topic)}))
       } catch (error) {
         reject('Error: Can not get topics.');
       }
@@ -22,8 +26,8 @@ export class ChatService {
       if (isNaN(userId)) reject('User id must be a number.');
       try {        
         const query = `SELECT * FROM topic WHERE user_id = ${userId} ORDER BY id DESC`;
-        const topics = await DbHelper.selectAll(query) as Array<Topic>;
-        resolve(topics);
+        const topics = await DbHelper.selectAll(query) as Array<TopicDto>;
+        resolve(topics.map(topic => { return this.transformToTopicObject(topic)}));
       } catch (error) {
         reject('Error: Can not get topics');
       }
@@ -35,9 +39,9 @@ export class ChatService {
       if (isNaN(topicId)) reject('Topic id must be a number.');
       try {
         const query = `SELECT * FROM topic WHERE id = ${topicId}`
-        const topic = await DbHelper.getOneElement(query);
+        const topic = await DbHelper.getOneElement(query) as TopicDto;
         if (!topic) reject('Error: Topic not found');
-        resolve(topic);
+        resolve(this.transformToTopicObject(topic));
       } catch (error) {
         reject('Error: Can not get topics')
       }
@@ -117,8 +121,10 @@ export class ChatService {
     return new Promise( async (resolve, reject) => {
       if (isNaN(topicId)) reject('Topic id must be a number.');
       try {
-        const query = `SELECT * FROM message WHERE id  = ${topicId} ORDER BY id DESC;`;
-        const messages = await DbHelper.selectAll(query) as Array<Message>;
+        const query = `SELECT * FROM message WHERE topic_id=${topicId} ORDER BY id ASC;`;
+        const dbMessages = await DbHelper.selectAll(query) as Array<MessageDto>;
+        console.log(dbMessages)
+        const messages = dbMessages.map(msg => { return this.transformToMessagesObject(msg)});
         resolve(messages)
       } catch (error) {
         reject('Error: Can not get messages.');
@@ -134,9 +140,12 @@ export class ChatService {
         const createdAt = this.geTimesTamp();
         const query = `INSERT INTO message (user_id, topic_id, content, author, createdAt) VALUES (?, ?, ?, ?, ?)`;
         const dbRes = await DbHelper.insertInto(query, [userId.toString(), topicId.toString(),content, author, createdAt]);
+        if (!dbRes) reject('Cannot send message')
+
+        this.appGateway.server.emit('messageToClient', dbRes);
         resolve(dbRes);
       } catch (error) {
-        reject('Cannot create topic');
+        reject('Cannot send message');
       }
     });
   }
@@ -146,6 +155,27 @@ export class ChatService {
       return new Date().getTime().toString();
     } catch (error) {
       return ''; 
+    }
+  }
+
+  transformToTopicObject(dbTopic: TopicDto): Topic {
+    return {
+      id: dbTopic?.id,
+      title: dbTopic?.title,
+      author: dbTopic?.author,
+      userId: dbTopic?.user_id,
+      createdAt: dbTopic?.createdAt,
+      updatedAt: dbTopic?.updatedAt
+    };
+  }
+  transformToMessagesObject(dbMessage: MessageDto): Message {
+    return {
+      id: dbMessage?.id,
+      content: dbMessage?.content,
+      author: dbMessage?.author,
+      topicId: dbMessage?.topic_id,
+      userId: dbMessage?.user_id,
+      createdAt: dbMessage?.createdAt
     }
   }
 }

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { ISignInRequest } from 'src/app/model/auth.model';
+import { SignInRequest } from 'src/app/model/auth.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { Router } from '@angular/router';
 import { StoreService } from 'src/app/common/services/store.service';
@@ -35,12 +35,12 @@ export class LoginComponent implements OnInit {
   onSubmitLoginForm(): void {
     console.log(this.usernameControl.value);
     console.log(this.passwordControl.value);
-    const signInRequest: ISignInRequest = {
+    const signInRequest: SignInRequest = {
       username: this.usernameControl.value,
       password: this.passwordControl.value
     };
     this.authService.signIn(signInRequest).subscribe(signIn => {
-      this.storeService.user = signIn;
+      this.storeService.setUser(signIn);
       this.route.navigate(['topics']);
     });
   }

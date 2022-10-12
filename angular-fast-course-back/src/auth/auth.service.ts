@@ -54,6 +54,18 @@ export class AuthService {
     })
   }
 
+  async verifyToken(toekn: string, userId: number): Promise<boolean> {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const payload = await this.jwtService.verify(toekn, {secret: JWT_CONSTENT.secret});
+        const isValidToken = payload.sub === userId;
+        resolve(isValidToken);
+      } catch (error) {
+        reject(false);
+      }
+    });
+  }
+
   async isValidCredentials(source: string, target: string): Promise<boolean> {
     return await this.comparePassword(source, target);
   }
@@ -66,7 +78,8 @@ export class AuthService {
       try {
         const user = await this.userService.getUserByUsername(username);
         if (!user) reject('Invalid username or password.');
-
+        if (user?.username?.toLowerCase() === username.toLowerCase()) reject('Invalid username or password.');
+        
         const isValidPwd = await this.isValidCredentials(password, user.password);
         if (!isValidPwd) reject('Invalid username or password.');
 

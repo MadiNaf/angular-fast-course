@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { TAB_USER_VIEW, UserSession } from 'src/app/model/chat-room.model';
+import { TAB_USER_VIEW } from 'src/app/model/chat-room.model';
+import { UserSession } from 'src/app/model/user.model';
 
 @Component({
   selector: 'app-user-view',

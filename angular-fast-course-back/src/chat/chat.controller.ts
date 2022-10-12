@@ -1,5 +1,4 @@
 import { Controller, Get, Post, Put, Param, Body, Delete, UseGuards } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { Message, Topic } from 'src/model/chat.model';
 import { ChatService } from './chat.service';

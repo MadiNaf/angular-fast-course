@@ -1,9 +1,9 @@
-export interface ISignInRequest {
+export interface SignInRequest {
   username: string;
   password: string;
 }
 
-export interface IUserSession {
+export interface AuthUserSession {
   id: number;
   accessToken: string;
 }

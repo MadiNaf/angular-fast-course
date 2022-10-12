@@ -1,28 +1,30 @@
 <div id="chat">
   <section class="container">
-    <ng-container [ngTemplateOutlet]="conversation" [ngTemplateOutletContext]="{message: message}"></ng-container>
+    <ng-container [ngTemplateOutlet]="conversation"></ng-container>
   </section>
 
   <section class="message-field">
     <textarea name="message" id="msg-field" rows="6" (change)="onChangeMessage($event)">{{message}}</textarea>
-    <button>send</button>
+    <button (click)="onSendMessage()">send</button>
   </section>
 
-  <ng-template #conversation let-message="message">
-    <section class="msg-container left">
-      <div class="message">
-        <p class="author subtitle">Foo :</p>
-        <p class="content">{{message}}</p>
-        <p class="date">10/20/30</p>
-      </div>
-    </section>
-
-    <section class="msg-container right">
-      <div class="message">
-        <p class="author subtitle">Bar :</p>
-        <p class="content">message</p>
-        <p class="date">10/20/30</p>
-      </div>
-    </section>
+  <ng-template #conversation>
+    <ng-container *ngFor="let msg of messages">
+      <section *ngIf="user?.id != msg?.userId" class="msg-container left">
+        <div class="message">
+          <p class="author subtitle">{{ msg?.author}}</p>
+          <p class="content">{{msg.content}}</p>
+          <p class="date">{{msg?.createdAt}}</p>
+        </div>
+      </section>
+  
+      <section *ngIf="user?.id === msg?.userId" class="msg-container right">
+        <div class="message">
+          <p class="author subtitle">{{ msg?.author}}</p>
+          <p class="content">{{msg.content}}</p>
+          <p class="date">{{msg?.createdAt}}</p>
+        </div>
+      </section>
+    </ng-container>
   </ng-template>
 </div>

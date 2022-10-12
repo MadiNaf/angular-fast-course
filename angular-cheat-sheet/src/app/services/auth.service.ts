@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
-import { ISignInRequest } from '../model/auth.model';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { IUser } from '../model/user.model';
+import { SignInRequest } from '../model/auth.model';
+import { BehaviorSubject, lastValueFrom, Observable } from 'rxjs';
+import { User } from '../model/user.model';
 import { RestApiService } from '../common/services/rest-api.service';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -13,22 +14,22 @@ export class AuthService {
   private _session$: BehaviorSubject<string []>  = new BehaviorSubject(this.defaultValue);
   public session$ = this._session$.asObservable();
 
-  constructor(private commonRestApiService: RestApiService) { }
+  constructor(private commonRestApiService: RestApiService, private http: HttpClient) { }
 
-  public signIn(signInRequest: ISignInRequest): Observable<IUser> {
+  public signIn(signInRequest: SignInRequest): Observable<User> {
     return this.commonRestApiService.signIn(signInRequest);
   }
 
-  public signUp(user: IUser): Observable<IUser> {
+  public signUp(user: User): Observable<User> {
     return this.commonRestApiService.signUp(user);
   }
 
   public getUserSession(): boolean {
-    const { accessToken } = this.commonRestApiService.getSessionStorage() || '';
+    const session = this.commonRestApiService.getSessionStorage();
+    const { accessToken, id } = session ? session : { accessToken: '', id: 0 };
     return !!accessToken;
   }
   
-
   onListenChatSession(): void {
     const currentSession = this._session$.getValue();
     this.commonRestApiService.socket.on('openSession', (session) => {

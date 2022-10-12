@@ -1,6 +1,10 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { lastValueFrom } from 'rxjs';
+import { RestApiService } from 'src/app/common/services/rest-api.service';
 import { StoreService } from 'src/app/common/services/store.service';
+import { Topic } from 'src/app/model/chat-room.model';
 import { ChatService } from 'src/app/services/chat.service';
 
 @Component({
@@ -19,6 +23,7 @@ export class TopicComponent implements OnInit {
 
   constructor(private chatService: ChatService,
               private storeService: StoreService,
+              private commonRestApiService: RestApiService,
               private router: Router) { }
 
   ngOnInit(): void {
@@ -26,31 +31,38 @@ export class TopicComponent implements OnInit {
   }
 
   private getTopics(): void {
-    this.chatService.getAllTopics().subscribe(topics => this.allTopics = topics);
+    this.chatService.getAllTopics().subscribe({
+      next: (topics) => this.allTopics = topics,
+      error: (error) => this.commonRestApiService.hadleUnauthorizedRequest(error)
+    });
   }
 
   onClickCreateTopic() {
-    if (this.isEditMode) this.createTopic();
+    if (this.isEditMode) this.createTopic().then(() => console.log('%c Topic created.', 'color: green'));
     else this.toggleEditeMode();
   }
 
   private toggleEditeMode = () => this.isEditMode = !this.isEditMode;
 
-  createTopic() {
+  async createTopic(): Promise<void> {
+    const user = await lastValueFrom(this.storeService.user$)
     this.isLoading = true;
-    const topic = {
-      userId: this.storeService.user?.id,
-      author: this.storeService.user?.username,
+    const topic: Topic = {
+      userId: user?.id ? user.id : 0,
+      author: user?.username ? user.username : '',
       title: this.topicTitle
     }
     console.log(topic)
-    this.chatService.createTopic(topic).subscribe(res => {
-      console.log('___res :: ', res)
-      if (!res) this.isLoading = false;
-      this.getTopics();
-      this.toggleEditeMode();
-      this.isLoading = false;
-    }, () => { this.isLoading = false;});
+    this.chatService.createTopic(topic).subscribe({
+      next: (value) => {
+        console.log('___res :: ', value)
+        if (!value) this.isLoading = false;
+        this.getTopics();
+        this.toggleEditeMode();
+        this.isLoading = false;
+      },
+      error: (e) =>  this.isLoading = false,
+    });
   }
 
   navToChatroom(topic: any) {

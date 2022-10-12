@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { StoreService } from 'src/app/common/services/store.service';
-import { IUser } from 'src/app/model/user.model';
+import { User } from 'src/app/model/user.model';
 import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
@@ -49,14 +49,14 @@ export class SignupComponent implements OnInit {
   onSubmitSignUpForm(): void {
     const password = this.passwordControl.value;
     if (password === this.pwdConfirmationControl.value) {
-      const user: IUser = {
+      const user: User = {
         firstname: this.firstnameControl.value,
         lastname: this.lastnameControl.value,
         username: this.usernameControl.value,
         password: this.passwordControl.value
       }
       this.authService.signUp(user).subscribe(user => {
-        this.storeService.user = user;
+        this.storeService.setUser(user);
         this.route.navigate(['topics']);
       });
     }
