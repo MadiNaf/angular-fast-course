@@ -78,10 +78,10 @@ export class AuthService {
       try {
         const user = await this.userService.getUserByUsername(username);
         if (!user) reject('Invalid username or password.');
-        if (user?.username?.toLowerCase() === username.toLowerCase()) reject('Invalid username or password.');
+        if (user.username.toLowerCase() != username.toLowerCase()) reject('Invalid username.');
         
         const isValidPwd = await this.isValidCredentials(password, user.password);
-        if (!isValidPwd) reject('Invalid username or password.');
+        if (!isValidPwd) reject('Invalid password.');
 
         resolve({...user, password: '***'});
       } catch (error) {

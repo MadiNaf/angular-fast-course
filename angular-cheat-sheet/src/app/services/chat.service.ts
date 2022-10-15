@@ -34,7 +34,6 @@ export class ChatService {
   }
 
   public getMessages(topicId: number): void {
-    console.log('_________________________GET_MESSAGES :: ', topicId);
     const headers = this.commonRestApiService.getHeaderRequest();
     this.http.get(`${this.commonRestApiService.apiUrl}chat/message/${topicId}`, { headers: headers }).subscribe({
       next: (msg) => this._messages$.next(msg as Array<Message>),
@@ -43,7 +42,7 @@ export class ChatService {
   }
 
   public async startListenMessageEvent(): Promise<void> {
-    this.commonRestApiService.socket.on('messagesToClient', (message) => {
+    this.commonRestApiService.socket.on('messageToClient', (message) => {
       console.log('Hello from server')
       this.getMessages(message?.topicId)
     });

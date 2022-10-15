@@ -1,6 +1,6 @@
 #chat {
   box-sizing: border-box;
-  background: #283747b0;
+  background: #28374744;
   width: 100%;
   min-height: 250px;
   max-height: 100%;
@@ -11,8 +11,11 @@
     box-sizing: border-box;
     width: 100%;
     min-height: 250px;
+    max-height: 700px;
+    overflow: hidden;
+    overflow-y: scroll;
     border-radius: 6px;
-    background-color: #34495E;
+    background-color: #34495E44;
     margin-bottom: 10px;
     padding: 16px;
   }

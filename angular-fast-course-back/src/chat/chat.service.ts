@@ -123,7 +123,6 @@ export class ChatService {
       try {
         const query = `SELECT * FROM message WHERE topic_id=${topicId} ORDER BY id ASC;`;
         const dbMessages = await DbHelper.selectAll(query) as Array<MessageDto>;
-        console.log(dbMessages)
         const messages = dbMessages.map(msg => { return this.transformToMessagesObject(msg)});
         resolve(messages)
       } catch (error) {
@@ -132,7 +131,7 @@ export class ChatService {
     });
   }
 
-  async sendMessage(message: Message): Promise<Message []> {
+  async sendMessage(message: Message): Promise<Message> {
     return new Promise(async (resolve, reject) => {  
       if (!message) reject('Invalid messge');
       try {
@@ -140,10 +139,10 @@ export class ChatService {
         const createdAt = this.geTimesTamp();
         const query = `INSERT INTO message (user_id, topic_id, content, author, createdAt) VALUES (?, ?, ?, ?, ?)`;
         const dbRes = await DbHelper.insertInto(query, [userId.toString(), topicId.toString(),content, author, createdAt]);
-        if (!dbRes) reject('Cannot send message')
+        if (!dbRes) reject('Cannot send message');
 
-        this.appGateway.server.emit('messageToClient', dbRes);
-        resolve(dbRes);
+        this.appGateway.server.emit('messageToClient', message);
+        resolve(message);
       } catch (error) {
         reject('Cannot send message');
       }

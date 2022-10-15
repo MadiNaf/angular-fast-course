@@ -46,7 +46,7 @@ export class ChatController {
 
   @UseGuards(JwtAuthGuard)
   @Post('/message/new')
-  async createMessage(@Body() message: Message): Promise<Message []> {
+  async createMessage(@Body() message: Message): Promise<Message> {
     return await this.chatService.sendMessage(message);
   }
 }
