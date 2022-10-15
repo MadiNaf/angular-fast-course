@@ -1,4 +1,8 @@
+
 <div id="chat">
+  <div>
+    <button (click)="navToAnchor(messages.length)">test</button>
+  </div>
   <section class="container">
     <ng-container [ngTemplateOutlet]="conversation"></ng-container>
   </section>
@@ -15,6 +19,7 @@
           <p class="author subtitle">{{ msg?.author}}</p>
           <p class="content">{{msg.content}}</p>
           <p class="date">{{msg?.createdAt}}</p>
+          <span [id]="'msg'+msg.id" class="anchor"></span>
         </div>
       </section>
   
@@ -23,6 +28,7 @@
           <p class="author subtitle">{{ msg?.author}}</p>
           <p class="content">{{msg.content}}</p>
           <p class="date">{{msg?.createdAt}}</p>
+          <span [id]="'msg'+msg.id" class="anchor"></span>
         </div>
       </section>
     </ng-container>

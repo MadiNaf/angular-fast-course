@@ -32,7 +32,10 @@ export class ChatComponent implements OnInit {
         this.chatService.getMessages((topic.id));
       } else this.router.navigate(['topics']);
     });
-    this.chatService.messages$.subscribe(messages => this.messages = messages);
+    this.chatService.messages$.subscribe(messages => {
+      this.messages = messages;
+      this.navToAnchor(this.messages.length )
+    });
   }
 
   public onChangeMessage(event: Event): void {
@@ -50,8 +53,11 @@ export class ChatComponent implements OnInit {
       topicId: this.topic?.id ? this.topic.id : 0,
     }
 
-    this.chatService.createMessage(message).subscribe(msg => {
-      console.log('message :: ', msg);
-    });
+    this.chatService.createMessage(message).subscribe(() => { });
+  }
+
+  public navToAnchor(lastMsgId: number): void {
+    console.log('lastMsgId', lastMsgId)
+    location.hash = `#msg${lastMsgId}`; 
   }
 }
