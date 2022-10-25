@@ -1,0 +1,36 @@
+
+<div id="chat">
+  <div>
+    <button (click)="navToAnchor(messages.length)">test</button>
+  </div>
+  <section class="container">
+    <ng-container [ngTemplateOutlet]="conversation"></ng-container>
+  </section>
+
+  <section class="message-field">
+    <textarea name="message" id="msg-field" rows="6" (change)="onChangeMessage($event)">{{message}}</textarea>
+    <button (click)="onSendMessage()">send</button>
+  </section>
+
+  <ng-template #conversation>
+    <ng-container *ngFor="let msg of messages">
+      <section *ngIf="user?.id != msg?.userId" class="msg-container left">
+        <div class="message">
+          <p class="author subtitle">{{ msg?.author}}</p>
+          <p class="content">{{msg.content}}</p>
+          <p class="date">{{msg?.createdAt}}</p>
+          <span [id]="'msg'+msg.id" class="anchor"></span>
+        </div>
+      </section>
+  
+      <section *ngIf="user?.id === msg?.userId" class="msg-container right">
+        <div class="message">
+          <p class="author subtitle">{{ msg?.author}}</p>
+          <p class="content">{{msg.content}}</p>
+          <p class="date">{{msg?.createdAt}}</p>
+          <span [id]="'msg'+msg.id" class="anchor"></span>
+        </div>
+      </section>
+    </ng-container>
+  </ng-template>
+</div>

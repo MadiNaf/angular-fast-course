@@ -1,0 +1,19 @@
+<div id="login">
+  <form [formGroup]="loginForm">
+    <input-custom inputId="username"
+                  lablel="Username"
+                  inputType="text"
+                  width="320"
+                  [formControl]="usernameControl"></input-custom>
+  
+    <input-custom inputId="password"
+                  lablel="Password"
+                  inputType="password"
+                  width="320"
+                  [formControl]="passwordControl"></input-custom>
+  </form>
+
+  <section class="btn-container">
+    <button class="btn" (click)="onSubmitLoginForm()">valider</button>
+  </section>
+</div>

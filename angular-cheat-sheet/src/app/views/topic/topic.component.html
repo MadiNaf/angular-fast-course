@@ -1,0 +1,24 @@
+<div *ngIf="!isLoading" id="topic">
+  <div>
+    <section class="topic-container">
+      <div *ngFor="let topic of allTopics" class="single-topic" (click)="navToChatroom(topic)">
+        <h3 class="topic-title">{{topic.title}}</h3>
+        <div class="topic-info">        
+          <p>last update : {{topic.updatedAt}} </p>
+          <p>Create at : {{topic.createdAt}}</p>
+        </div>
+        <p class="topic-author">Created by @{{ topic.author}} </p>
+      </div>
+    </section>
+  
+    <section *ngIf="isEditMode" class="topic-input-container">
+      <label for="topic-title">Topic title: </label>
+      <input id="topic-title" type="text" name="topicTitle" [(ngModel)]="topicTitle">
+    </section>
+  
+    <section class="topic-add-action">
+      <button class="btn" (click)="onClickCreateTopic()">create a new topic</button>
+    </section>
+  </div>
+</div>
+
